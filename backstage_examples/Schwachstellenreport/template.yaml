@@ -1,0 +1,44 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: schwachstellenreport
+  title: Schwachstellenreport
+  description: Erzeuge Schwachstellenreport für ein Artifactory Repository
+  tags:
+    - housekeeping
+    - schwachstellen
+spec:
+  owner: web@example.com
+  type: website
+  parameters:
+    - title: Provide necessary information
+      required:
+        - artifactory_repo
+        - recipient
+      properties:
+        artifactory_repo:
+          title: Artifactory Repository
+          type: string
+          description: Name des Repositorys im Format <repo>-docker.docker.artifactory.europe.axa-cloud.com
+          ui:field: EntityNamePicker
+        recipient:
+          title: MailAdresse des Empfängers
+          type: string
+          description: MailAdresse des Empfängers
+          ui:field: EntityNamePicker
+  steps:
+
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts:
+          - github.axa.com
+        description: This is ${{ parameters.artifactory_repo }}
+        repoUrl: ${{ parameters.recipient }}
+
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
