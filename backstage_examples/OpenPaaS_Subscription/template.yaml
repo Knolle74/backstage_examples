@@ -37,7 +37,7 @@ spec:
           description: List of services to enable for this subscription
           items:
             type: string
-          ui:widget: checkbox
+          ui:widget: checkboxes
           default:
             - openShift-project
             - github-orga
