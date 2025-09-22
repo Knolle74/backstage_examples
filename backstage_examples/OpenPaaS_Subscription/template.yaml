@@ -37,12 +37,12 @@ spec:
           description: List of services to enable for this subscription
           items:
             type: string
+            enum:
+              - openShift-project
+              - github-orga
+              - artifactory-repository
+              - crg
           ui:widget: checkboxes
-          enum:
-            - openShift-project
-            - github-orga
-            - artifactory-repository
-            - crg
     - title: SetUp CI/CD Tekton ArgoCD Stack
       required:
         - namespace-release
