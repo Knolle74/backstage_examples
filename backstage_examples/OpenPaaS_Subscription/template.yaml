@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://github.com/backstage/backstage/blob/master/plugins/scaffolder-common/src/Template.v1beta3.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/backstage/backstage/refs/heads/master/plugins/scaffolder-common/src/Template.v1beta3.schema.json
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
@@ -48,7 +48,7 @@ spec:
       required:
         - namespace-release
       properties:
-        namespace:
+        namespace-release:
           title: OpenShift Project where to set up the CI/CD stack
           type: string
           description: OpenShift Project where to set up the CI/CD stack
