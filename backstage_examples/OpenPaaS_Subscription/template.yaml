@@ -1,4 +1,3 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/backstage/backstage/refs/heads/master/plugins/scaffolder-common/src/Template.v1beta3.schema.json
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
@@ -6,73 +5,41 @@ metadata:
   title: Set me up on OpenShift
   description: Create new OpenPaaS Subscription including MTM Services, CI/CD and ArgoCD
   tags:
-    - openpaas
-    - subscription
+    - housekeeping
+    - user-management
 spec:
   owner: web@example.com
   type: website
   parameters:
     - title: Provide necessary information
       required:
-        - subs_name
-        - local_id
+        - excelfile
+        - subscriptionName
       properties:
-        subs_name:
-          title: Subscription Name
+        excelfile:
+          title: Inputfile
           type: string
-          description: Enter name of your subscription
+          description: Path to github location the input excel-file resides
         description:
-          title: Description
+          title: ChangeLog-Description
           type: string
           description: Help others understand what job did
-        local_id:
-          title: Local ID
-          type: integer
-          description: Your local id
-    - title: Provide OpenPaaS Services
-      properties:
-        name:
-          title: Services
-          type: array
-          description: List of services to enable for this subscription
-          items:
-            type: string
-            enum:
-              - 'openShift-project'
-              - 'github-orga'
-              - 'artifactory-repository'
-              - 'crg'
-          ui:
-            widget: checkboxes
-          uniqueItems: true
-    - title: SetUp CI/CD Tekton ArgoCD Stack
+        subscriptionName:
+          title: Subscription Name
+          type: string
+          description: OpenPaaS subscription Name to clean
+    - title: Choose a location
       required:
-        - namespace-release
+        - repoUrl
       properties:
-        namespace-release:
-          title: OpenShift Project where to set up the CI/CD stack
+        repoUrl:
+          title: Repository Location
           type: string
-          description: OpenShift Project where to set up the CI/CD stack
-        staging-namespace:
-          title: OpenShift Project where to set up the Staging CI/CD Environment
-          type: string
-          description: OpenShift Project where to set up the Staging CI/CD Environment
-        pipelines:
-          title: Enable Pipelines for which Techniques
-          type: array
-          items:
-            type: string
-            enum:
-              - 'Enable Java Maven'
-              - 'Enable Java Gradle'
-              - 'Enable Golang'
-              - 'Enable NodeJS'
-              - 'Enable Python'
-              - 'Enable Container Image Build'
-          uniqueItems: true
           ui:
-            widget: checkboxes
-
+            field: RepoUrlPicker
+            options:
+              allowedHosts:
+                - github.com
   steps:
     - id: template
       name: Fetch Skeleton + Template
@@ -82,15 +49,31 @@ spec:
         copyWithoutRender:
           - .github/workflows/*
         values:
-          component_id: ${{ parameters.subs_name }}
+          component_id: ${{ parameters.excelfile }}
           description: ${{ parameters.description }}
-          local_id: ${{ parameters.local_id }}
-          owner: ${{ parameters.owner }}
+          destination: ${{ parameters.repoUrl | parseRepoUrl }}
+          owner: ${{ parameters.subscription }}
+
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts:
+          - github.axa.com
+        description: This is ${{ parameters.excelfile }}
+        repoUrl: ${{ parameters.repoUrl }}
+
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
 
   output:
     links:
       - title: Repository
-        url: ${{ steps.template.output.remoteUrl }}
+        url: ${{ steps.publish.output.remoteUrl }}
       - title: Open in catalog
         icon: catalog
-        entityRef: ${{ steps.template.output.entityRef }}
+        entityRef: ${{ steps.register.output.entityRef }}
