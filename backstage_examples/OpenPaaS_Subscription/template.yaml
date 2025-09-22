@@ -4,7 +4,7 @@ kind: Template
 metadata:
   name: create-new-subscription
   title: Create new OpenPaaS Subscription
-  description: Create new OpenPaaS Subscription
+  description: Create new OpenPaaS Subscription, setup basic CI and basic CD Environemnt
   tags:
     - openpaas
     - subscription
