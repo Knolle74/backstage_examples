@@ -38,7 +38,7 @@ spec:
           items:
             type: string
           ui:widget: checkboxes
-          default:
+          enum:
             - openShift-project
             - github-orga
             - artifactory-repository
