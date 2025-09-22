@@ -38,7 +38,7 @@ spec:
           ui:field: RepoUrlPicker
           ui:options:
             allowedHosts:
-              - github.axa.com
+              - github.com
   steps:
     - id: template
       name: Fetch Skeleton + Template
