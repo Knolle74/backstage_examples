@@ -31,7 +31,7 @@ spec:
           description: Your local id
     - title: Provide OpenPaaS Services
       properties:
-        services:
+        name:
           title: Services
           type: array
           description: List of services to enable for this subscription
@@ -43,6 +43,7 @@ spec:
               - artifactory-repository
               - crg
           ui:widget: checkboxes
+          uniqueItems: true
     - title: SetUp CI/CD Tekton ArgoCD Stack
       required:
         - namespace-release
