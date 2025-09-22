@@ -14,7 +14,7 @@ spec:
     - title: Provide necessary information
       required:
         - excelfile
-        - subscription
+        - subscriptionName
       properties:
         excelfile:
           title: Inputfile

@@ -3,8 +3,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: create-new-subscription
-  title: Create new OpenPaaS Subscription
-  description: Create new OpenPaaS Subscription
+  title: Set me up on OpenShift
+  description: Create new OpenPaaS Subscription including MTM Services, CI/CD and ArgoCD
   tags:
     - openpaas
     - subscription
