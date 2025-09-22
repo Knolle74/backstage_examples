@@ -1,49 +1,80 @@
+# yaml-language-server: $schema=https://github.com/backstage/backstage/blob/master/plugins/scaffolder-common/src/Template.v1beta3.schema.json
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: delete-expired-users
-  title: Delete expired Users from OpenPaaS Portal
-  description: Initiate a job to delete expired users from OpenPaaS Portal
+  name: create-new-subscription
+  title: Create new OpenPaaS Subscription
+  description: Create new OpenPaaS Subscription
   tags:
-    - housekeeping
-    - user-management
+    - openpaas
+    - subscription
 spec:
   owner: web@example.com
   type: website
   parameters:
     - title: Provide necessary information
       required:
-        - excelfile
-        - subscription
+        - subs_name
+        - local_id
       properties:
-        excelfile:
-          title: Inputfile
+        subs_name:
+          title: Subscription Name
           type: string
           description: Path to github location the input excel-file resides
           ui:field: EntityNamePicker
         description:
-          title: ChangeLog-Description
+          title: Description
           type: string
           description: Help others understand what job did
-        subscription:
-          title: Subscription
+        local_id:
+          title: Local ID
           type: string
-          description: OpenPaaS subscription to clean
+          description: Your local id
           ui:field: OpenPaaSSubscriptionPicker
           ui:options:
             allowedKinds:
               - Group
-    - title: Choose a location
-      required:
-        - repoUrl
+    - title: Provide OpenPaaS Services
       properties:
-        repoUrl:
-          title: Inputfile
+        services:
+          title: Services
+          type: array
+          description: List of services to enable for this subscription
+          items:
+            type: string
+          ui:widget: checkbox
+          default:
+            - openShift-project
+            - github-orga
+            - artifactory-repository
+            - crg
+    - title: SetUp CI/CD Tekton ArgoCD Stack
+      required:
+        - namespace-release
+      properties:
+        namespace:
+          title: OpenShift Project where to set up the CI/CD stack
           type: string
-          ui:field: RepoUrlPicker
-          ui:options:
-            allowedHosts:
-              - github.axa.com
+          description: OpenShift Project where to set up the CI/CD stack
+        staging-namespace:
+          title: OpenShift Project where to set up the Staging CI/CD Environment
+          type: string
+          description: OpenShift Project where to set up the Staging CI/CD Environment
+        name:
+          title: Enable Pipelines for which Techniques
+          type: array
+          items:
+            type: string
+            enum:
+              - 'Enable Java/Maven'
+              - 'Enable Java/Gradle'
+              - 'Enable Golang'
+              - 'Enable NodeJS'
+              - 'Enable Python'
+              - 'Enable Container Image Build'
+          uniqueItems: true
+          ui:widget: checkboxes
+
   steps:
     - id: template
       name: Fetch Skeleton + Template
@@ -53,31 +84,15 @@ spec:
         copyWithoutRender:
           - .github/workflows/*
         values:
-          component_id: ${{ parameters.excelfile }}
+          component_id: ${{ parameters.subs_name }}
           description: ${{ parameters.description }}
-          destination: ${{ parameters.repoUrl | parseRepoUrl }}
+          local_id: ${{ parameters.local_id }}
           owner: ${{ parameters.owner }}
-
-    - id: publish
-      name: Publish
-      action: publish:github
-      input:
-        allowedHosts:
-          - github.axa.com
-        description: This is ${{ parameters.excelfile }}
-        repoUrl: ${{ parameters.repoUrl }}
-
-    - id: register
-      name: Register
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: "/catalog-info.yaml"
 
   output:
     links:
       - title: Repository
-        url: ${{ steps.publish.output.remoteUrl }}
+        url: ${{ steps.template.output.remoteUrl }}
       - title: Open in catalog
         icon: catalog
-        entityRef: ${{ steps.register.output.entityRef }}
+        entityRef: ${{ steps.template.output.entityRef }}
