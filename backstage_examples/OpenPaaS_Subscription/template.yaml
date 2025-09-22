@@ -28,12 +28,8 @@ spec:
           description: Help others understand what job did
         local_id:
           title: Local ID
-          type: string
+          type: integer
           description: Your local id
-          ui:field: OpenPaaSSubscriptionPicker
-          ui:options:
-            allowedKinds:
-              - Group
     - title: Provide OpenPaaS Services
       properties:
         services:
