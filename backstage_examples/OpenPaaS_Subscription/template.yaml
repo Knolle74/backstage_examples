@@ -36,13 +36,13 @@ spec:
           type: array
           description: List of services to enable for this subscription
           items:
-            type: boolean
+            type: string
             enum:
               - openShift-project
               - github-orga
               - artifactory-repository
               - crg
-          ui:widget: checkboxes
+          ui:widget: radio
           uniqueItems: true
     - title: SetUp CI/CD Tekton ArgoCD Stack
       required:
@@ -56,11 +56,11 @@ spec:
           title: OpenShift Project where to set up the Staging CI/CD Environment
           type: string
           description: OpenShift Project where to set up the Staging CI/CD Environment
-        name:
+        pipelines:
           title: Enable Pipelines for which Techniques
           type: array
           items:
-            type: boolean
+            type: string
             enum:
               - 'Enable Java/Maven'
               - 'Enable Java/Gradle'
@@ -69,7 +69,7 @@ spec:
               - 'Enable Python'
               - 'Enable Container Image Build'
           uniqueItems: true
-          ui:widget: checkboxes
+          ui:widget: radio
 
   steps:
     - id: template
