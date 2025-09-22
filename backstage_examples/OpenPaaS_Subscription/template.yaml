@@ -36,7 +36,7 @@ spec:
           type: array
           description: List of services to enable for this subscription
           items:
-            type: string
+            type: boolean
             enum:
               - openShift-project
               - github-orga
@@ -60,7 +60,7 @@ spec:
           title: Enable Pipelines for which Techniques
           type: array
           items:
-            type: string
+            type: boolean
             enum:
               - 'Enable Java/Maven'
               - 'Enable Java/Gradle'
