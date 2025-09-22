@@ -31,18 +31,19 @@ spec:
           description: Your local id
     - title: Provide OpenPaaS Services
       properties:
-        name:
+        services:
           title: Services
           type: array
           description: List of services to enable for this subscription
           items:
             type: string
             enum:
-              - openShift-project
-              - github-orga
-              - artifactory-repository
-              - crg
-          ui:widget: radio
+              - 'openShift-project'
+              - 'github-orga'
+              - 'artifactory-repository'
+              - 'crg'
+          ui:
+            widget: checkboxes
           uniqueItems: true
     - title: SetUp CI/CD Tekton ArgoCD Stack
       required:
@@ -62,14 +63,15 @@ spec:
           items:
             type: string
             enum:
-              - 'Enable Java/Maven'
-              - 'Enable Java/Gradle'
+              - 'Enable Java Maven'
+              - 'Enable Java Gradle'
               - 'Enable Golang'
               - 'Enable NodeJS'
               - 'Enable Python'
               - 'Enable Container Image Build'
           uniqueItems: true
-          ui:widget: radio
+          ui:
+            widget: checkboxes
 
   steps:
     - id: template
