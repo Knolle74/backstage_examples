@@ -24,10 +24,10 @@ spec:
           title: ChangeLog-Description
           type: string
           description: Help others understand what job did
-        subscription:
-          title: Subscription
+        subscriptionName:
+          title: Subscription Name
           type: string
-          description: OpenPaaS subscription to clean
+          description: OpenPaaS subscription Name to clean
     - title: Choose a location
       required:
         - repoUrl
