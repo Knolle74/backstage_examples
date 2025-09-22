@@ -20,7 +20,6 @@ spec:
           title: Inputfile
           type: string
           description: Path to github location the input excel-file resides
-          ui:field: EntityNamePicker
         description:
           title: ChangeLog-Description
           type: string
