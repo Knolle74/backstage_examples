@@ -28,10 +28,6 @@ spec:
           title: Subscription
           type: string
           description: OpenPaaS subscription to clean
-          ui:field: OpenPaaSSubscriptionPicker
-          ui:options:
-            allowedKinds:
-              - Group
     - title: Choose a location
       required:
         - repoUrl
