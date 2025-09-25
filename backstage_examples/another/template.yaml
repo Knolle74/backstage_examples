@@ -1,0 +1,40 @@
+
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: GitHub Zugriff
+  title: Scaffolder Example Template
+  description: An example template für einen Zugriff auf GitHub
+spec:
+  owner: user:guest
+  type: service
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+  steps:
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          destination: ${{ parameters.repoUrl | parseRepoUrl }}
+    - id: list-files
+      name: List Files
+      action: fs:readdir
+      input:
+        paths: 
+          - .
+        recursive: true
